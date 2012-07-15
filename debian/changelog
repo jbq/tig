@@ -1,0 +1,265 @@
+tig (1.0-2) unstable; urgency=low
+
+  * debian/patches:
+    - Added bts680442-broken-graph.patch -- upstream patch fixing a regression
+      breaking the graph when path spec is specified; thanks to Simon Paillard
+      for reporting this (Closes: #680442).
+  * debian/source/format:
+    - Change to '3.0 (quilt)' format in order to apply the patch.
+
+ -- Sebastian Harl <tokkee@debian.org>  Sun, 15 Jul 2012 11:42:29 +0200
+
+tig (1.0-1) unstable; urgency=low
+
+  * New upstream release; thanks to Salvatore Bonaccorso and Romain Francoise
+    for reporting this (Closes: #656810).
+    - Fixed substitution of %(xxx) in prompt commands; thanks to Daniel T Chen
+      for reporting this (Closes: #635546).
+    - Fixed 'go to a line' feature; thanks to Christian Ohm for reporting this
+      (Closes: #626124).
+  * debian/rules:
+    - Don't remove 'test-graph'; it is no longer installed by 'make install'.
+    - Don't try to install TODO; it no longer exists.
+    - Split build target into build-{arch,indep} as recommended by policy.
+    - Enabled harding build flags (use dpkg-buildflags).
+  * debian/control:
+    - Updated standards-version to 3.9.3 -- no changes.
+
+ -- Sebastian Harl <tokkee@debian.org>  Thu, 17 May 2012 18:15:46 +0200
+
+tig (0.17-1) unstable; urgency=low
+
+  * New upstream release:
+    - Fixed ncurses 2.8 issue causing tig to fail to start; thanks to Tarek
+      Soliman for reporting this and RjY for pointing out the new upstream
+      release (Closes: #617318).
+    - Enabled revision graph rendering by default; thanks to Paul Wise for
+      reporting this (Closes: #611876).
+  * Uploading to unstable -- Squeeze has been released \o/
+  * debian/rules:
+    - (Again) pass -I/usr/include/ncursesw to CFLAGS; this is no longer
+      handled by the configure script which now uses the third-party
+      'AX_WITH_CURSES' macro.
+    - Do not install 'test-graph' to the package.
+    - Install 'NEWS' as upstream changelog, rather than as 'NEWS'.
+
+ -- Sebastian Harl <tokkee@debian.org>  Tue, 08 Mar 2011 14:43:17 +0100
+
+tig (0.16.2-1) experimental; urgency=low
+
+  * New upstream release.
+  * debian/patches:
+    - Removed bts594549-pager-segfault -- included upstream.
+  * debian/control, debian/rules:
+    - No longer use dpatch.
+  * Removed debian/README.source.
+  * Uploading to experimental because of the Squeeze freeze.
+  * debian/control:
+    - Updated Standards-Version to 3.9.1 -- no changes.
+
+ -- Sebastian Harl <tokkee@debian.org>  Tue, 21 Sep 2010 21:57:26 +0200
+
+tig (0.16-2) unstable; urgency=low
+
+  * debian/patches:
+    - Added bts594549-pager-segfault - upstream patch fixing a segfault when
+      started in pager mode; thanks to Kumar Appaiah for reporting this and
+      pointing out the upstream fix (Closes: #594549).
+  * debian/control, debian/rules:
+    - Build-depend on and use dpatch.
+  * Added debian/README.source:
+    - The file includes a pointer to /usr/share/doc/dpatch/README.source.gz.
+
+ -- Sebastian Harl <tokkee@debian.org>  Fri, 03 Sep 2010 21:23:44 +0200
+
+tig (0.16-1) unstable; urgency=low
+
+  * New upstream release; thanks to Sedat Dilek for the pointer
+    (Closes: #586560).
+  * debian/control:
+    - Updated versioned build-dep on asciidoc to versions >= 8.4 as documented
+      in the upstream `INSTALL' file.
+    - Updated standards-version to 3.8.4 -- no changes.
+    - Added epoch to versioned dependency on git-core and added git (>=
+      1:1.7.0.4-2~) as an alternative dependency, according to the rename of
+      the package; thanks to Jonathan Nieder and Beat Bolli for reporting this
+      (Closes: #568582).
+    - Depend on ${misc:Depends}, as recommended by debhelper.
+
+ -- Sebastian Harl <tokkee@debian.org>  Tue, 22 Jun 2010 22:51:20 +0200
+
+tig (0.15-1) unstable; urgency=low
+
+  * New upstream release (Closes: #557575):
+    - Fixed blame view when cwd is not the repo root; thanks to Chris Lamb for
+      reporting this (Closes: #540766).
+  * debian/control:
+    - No longer build-depend on git-core - this is not required by the build
+      system any more.
+    - Updated Standards-Version to 3.8.3 - no changes.
+  * debian/patches:
+    - Removed asciidoc-8.4.dpatch - included upstream.
+  * Added debian/tig.doc-base.
+    - … pointing to manual.html and manual.pdf.
+
+ -- Sebastian Harl <tokkee@debian.org>  Mon, 23 Nov 2009 22:56:47 +0100
+
+tig (0.14.1-2) unstable; urgency=low
+
+  * debian/patches:
+    - Added asciidoc-8.4.dpatch - upstream patch fixing build issues with
+      asciidoc 8.4, thanks to Lucas Nussbaum for reporting this
+      (Closes: #534046).
+  * debian/control:
+    - Updated standards-version to 3.8.2 - no changes.
+
+ -- Sebastian Harl <tokkee@debian.org>  Sun, 21 Jun 2009 18:36:46 +0200
+
+tig (0.14.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Uploading to unstable - Lenny has been released (Closes: #520636).
+  * debian/control:
+    - Moved tig from section "utils" to the newly added "vcs".
+  * debian/patches:
+    - Removed tigrc-example-fix.dpatch - included upstream.
+    - Removed quoted-config-opts-fix.dpatch - included upstream.
+  * debian/control:
+    - Updated standards-version to 3.8.1 - no changes.
+
+ -- Sebastian Harl <sh@tokkee.org>  Fri, 03 Apr 2009 18:07:18 +0200
+
+tig (0.14-1) experimental; urgency=low
+
+  * New upstream release.
+  * debian/patches:
+    - Removed non-utf8-fix.dpatch - included upstream.
+    - Removed tigrc-parsing-fix.dpatch - included upstream.
+    - Removed mem-corruption-fix.dpatch - included upstream.
+    - Added tigrc-example-fix.dpatch - upstream patch fixing an error in
+      examples for the set command (Closes: #514990).
+    - Added quoted-config-opts-fix.dpatch - backported upstream patch fixing
+      the handling of quoted strings in the config file.
+
+ -- Sebastian Harl <sh@tokkee.org>  Sat, 14 Feb 2009 13:59:03 +0100
+
+tig (0.13-1) experimental; urgency=low
+
+  * New upstream release (Closes: #513727).
+  * debian/copyright: Use © instead of (C) to make lintian happy.
+  * debian/patches:
+    - Added non-utf8-fix.dpatch - upstream patch fixing a regression in the
+      handling of non-UTF-8 locales.
+    - Added tigrc-parsing-fix.dpatch - upstream patch fixing a regression in
+      parsing ~/.tigrc.
+    - Added mem-corruption-fix.dpatch - upstream patch fixing memory
+      corruption when updating the tree view.
+  * debian/rules:
+    - Remove auto-generated NEWS.html and README.html in the clean target.
+
+ -- Sebastian Harl <sh@tokkee.org>  Tue, 03 Feb 2009 10:59:25 +0100
+
+tig (0.12.1-1) experimental; urgency=low
+
+  * New upstream release.
+    - Added support for refreshing the main view (Closes: #498365).
+    - Disable boundary commits by default, fixing the behavior when using
+      options like --author=foo (Closes: #498628).
+  * Uploading to experimental because of Lenny freeze.
+  * debian/rules:
+    - Install upstream NEWS file to /usr/share/doc/tig/.
+    - No longer add -I/usr/include/ncursesw to CFLAGS - this is now handled by
+      the configure script.
+    - No longer pass LIBS="-lncursesw" to configure - this is now handled by
+      the configure script.
+  * debian/control:
+    - Depend on git-core >= 1.5.4 - this is required by the new upstream
+      release.
+    - Changed XS-Vcs-* to Vcs-*.
+
+ -- Sebastian Harl <sh@tokkee.org>  Sat, 11 Oct 2008 18:06:24 +0200
+
+tig (0.11-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added git-core to the build dependencies (Closes: #481828).
+  * Updated standards-version to 3.8.0 - no changes.
+
+ -- Sebastian Harl <sh@tokkee.org>  Fri, 25 Jul 2008 07:47:37 +0200
+
+tig (0.10.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Moved "Homepage" field from package description to the source stanza.
+    - Added versioned build dependency on dpkg-dev (>= 1.14.6).
+  * Improved package description as suggested by Adeodato Simó
+    (Closes: #469290).
+  * Added wide character support, thanks to Cyril Brulebois for the patch
+    (Closes: #457068):
+    - Build-depend on libncursesw5-dev instead of libncurses5-dev.
+    - Pass "LIBS=-lncursesw" to configure.
+    - Added -I/usr/include/ncursesw to CFLAGS.
+  * Fixed a typo in debian/rules, preventing CFLAGS from being used, thanks to
+    Cyril Brulebois for the patch.
+  * Use the configure script provided by upstream.
+  * Updated standards-version to 3.7.3 - no changes.
+
+ -- Sebastian Harl <sh@tokkee.org>  Mon, 31 Mar 2008 12:57:05 +0200
+
+tig (0.9.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Sebastian Harl <sh@tokkee.org>  Mon,  1 Oct 2007 15:07:38 +0200
+
+tig (0.9-1) unstable; urgency=low
+
+  * New upstream release.
+    - The manpage builds fine now (Closes: #434127).
+  * Install new bash completion script to /etc/bash_completion.d/.
+  * Adapted package description to the latest git-core package description.
+  * debian/rules: Do not ignore "make clean" error.
+
+ -- Sebastian Harl <sh@tokkee.org>  Sun, 23 Sep 2007 21:22:25 +0200
+
+tig (0.8-1) unstable; urgency=low
+
+  * New upstream release.
+    - Fixes segfault in pager mode (Closes: #429448).
+  * Added XS-Vcs-{Git,Browser} tags.
+
+ -- Sebastian Harl <sh@tokkee.org>  Tue, 19 Jun 2007 11:52:39 +0100
+
+tig (0.7-1) unstable; urgency=low
+
+  * New upstream release.
+    - Handle cursor keys in split pane mode correctly (Closes: #410394).
+  * Removed infiniteloop.dpatch - included in the new release.
+  * Removed splitview.dpatch - included in the new release.
+  * Removed v0.5.dpatch - included in the new release.
+
+ -- Sebastian Harl <sh@tokkee.org>  Mon,  4 Jun 2007 15:05:29 +0200
+
+tig (0.5-3) unstable; urgency=low
+
+  * Added upstream patch by Jonas Fonseca <fonseca@diku.dk> to update the
+    version string to 0.5 (Closes: #409095).
+  * Added watch file.
+
+ -- Sebastian Harl <sh@tokkee.org>  Thu,  1 Feb 2007 10:31:18 +0000
+
+tig (0.5-2) unstable; urgency=medium
+
+  * Added two upstream patches by Jonas Fonseca <fonseca@diku.dk>:
+    - Fix a segfault when navigating in tree mode (Closes: #403565).
+    - Fix an infinite loop.
+  * Put the sample manpage in /usr/share/doc/tig/examples/.
+
+ -- Sebastian Harl <sh@tokkee.org>  Fri, 22 Dec 2006 09:08:57 +0000
+
+tig (0.5-1) unstable; urgency=low
+
+  * Initial release (Closes: #389926).
+
+ -- Sebastian Harl <sh@tokkee.org>  Thu, 28 Sep 2006 13:09:36 +0200
+
