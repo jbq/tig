@@ -1,0 +1,20 @@
+Document: tig
+Title: The tig Manual
+Author: Jonas Fonseca <fonseca@diku.dk>
+Abstract: This is the manual for tig, the ncurses-based text-mode interface
+ for git. Tig allows you to browse changes in a git repository and can
+ additionally act as a pager for output of various git commands. When used as
+ a pager, it will display input from stdin and colorize it.
+ .
+ When browsing repositories, tig uses the underlying git commands to present
+ the user with various views, such as summarized commit log and showing the
+ commit with the log message, diffstat, and the diff.
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/tig/manual.html
+Files: /usr/share/doc/tig/*.html
+
+Format: PDF
+Files: /usr/share/doc/tig/manual.pdf
+

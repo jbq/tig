@@ -1,0 +1,28 @@
+Source: tig
+Section: vcs
+Priority: optional
+Maintainer: Sebastian Harl <tokkee@debian.org>
+Build-Depends: debhelper (>= 5), dpkg-dev (>= 1.14.6), libncursesw5-dev, asciidoc (>= 8.4), xmlto, docbook-utils
+Standards-Version: 3.9.3
+Homepage: http://jonas.nitro.dk/tig/
+Vcs-Git: git://git.tokkee.org/pkg-tig.git
+Vcs-Browser: http://git.tokkee.org/?p=pkg-tig.git
+
+Package: tig
+Architecture: any
+Depends: git (>= 1:1.7.0.4-2~) | git-core (>= 1:1.5.4), ${shlibs:Depends},
+ ${misc:Depends}
+Description: ncurses-based Git repository browser
+ This package contains a text-mode interface for the version control system
+ Git. It may be used to browse the history and contents of a repository.
+ .
+ The following main features are supported:
+  - View revision logs, commit messages, diffstats, diffs, archive trees and
+    file contents.
+  - Visualize revision graphs.
+  - Stage / unstage changes and add untracked files.
+  - Merge files.
+  - Cherry-pick commits.
+ .
+ tig may also be used as a pager. It reads input from stdin and colorizes it.
+

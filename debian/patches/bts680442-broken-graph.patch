@@ -1,0 +1,67 @@
+Description: Fixed regression breaking the graph when path spec is specified.
+ (cf. upstream commit 5579a6ff047c0d1b319b5452a8443000921d7da1)
+Author: Jonas Fonseca <fonseca@diku.dk>
+
+diff --git a/git.h b/git.h
+index 8179261..e237683 100644
+--- a/git.h
++++ b/git.h
+@@ -47,9 +47,8 @@
+ 	GIT_DIFF_INITIAL("", context_arg, space_arg, "/dev/null", new_name)
+ 
+ #define GIT_MAIN_LOG(diffargs, revargs, fileargs) \
+-	"git", "log", ENCODING_ARG, "--no-color", "--date=raw", \
++	"git", "log", ENCODING_ARG, "--no-color", "--pretty=raw", "--parents", \
+ 		opt_commit_order_arg, (diffargs), (revargs), \
+-		"--pretty=format:commit %m%H %P%nauthor %an <%ae> %ad%ntitle %s", \
+ 		"--", (fileargs), NULL
+ 
+ #endif
+diff --git a/tig.c b/tig.c
+index 69c3a56..3b26ba1 100644
+--- a/tig.c
++++ b/tig.c
+@@ -6949,6 +6949,7 @@ main_read(struct view *view, char *line)
+ 	struct graph *graph = view->private;
+ 	enum line_type type;
+ 	struct commit *commit;
++	static bool in_header;
+ 
+ 	if (!line) {
+ 		if (!view->lines && !view->prev)
+@@ -6970,6 +6971,7 @@ main_read(struct view *view, char *line)
+ 	if (type == LINE_COMMIT) {
+ 		bool is_boundary;
+ 
++		in_header = TRUE;
+ 		line += STRING_SIZE("commit ");
+ 		is_boundary = *line == '-';
+ 		if (is_boundary || !isalnum(*line))
+@@ -6985,6 +6987,10 @@ main_read(struct view *view, char *line)
+ 		return TRUE;
+ 	commit = view->line[view->lines - 1].data;
+ 
++	/* Empty line separates the commit header from the log itself. */
++	if (*line == '\0')
++		in_header = FALSE;
++
+ 	switch (type) {
+ 	case LINE_PARENT:
+ 		if (!graph->has_parents)
+@@ -7002,7 +7008,15 @@ main_read(struct view *view, char *line)
+ 		if (commit->title[0])
+ 			break;
+ 
+-		line += STRING_SIZE("title ");
++		/* Skip lines in the commit header. */
++		if (in_header)
++			break;
++
++		/* Require titles to start with a non-space character at the
++		 * offset used by git log. */
++		if (strncmp(line, "    ", 4))
++			break;
++		line += 4;
+ 		/* Well, if the title starts with a whitespace character,
+ 		 * try to be forgiving.  Otherwise we end up with no title. */
+ 		while (isspace(*line))

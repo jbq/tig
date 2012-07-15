@@ -1,0 +1,3 @@
+version=3
+http://jonas.nitro.dk/tig/releases/ tig-(.*)\.tar\.gz
+
