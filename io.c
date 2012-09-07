@@ -337,13 +337,29 @@ open_trace(int devnull, const char *argv[])
 	return devnull;
 }
 
+static bool
+check_stdin()
+{
+	return !isatty(STDIN_FILENO) && (fcntl(STDIN_FILENO, F_GETFL) != -1 || errno != EBADF);
+}
+
 bool
 io_run(struct io *io, enum io_type type, const char *dir, const char *argv[], ...)
 {
+	static bool has_stdin = TRUE;
 	int pipefds[2] = { -1, -1 };
 	va_list args;
+	bool read_from_stdin = FALSE;
 
 	io_init(io);
+
+	if (type == IO_RD_STDIN) {
+		if (has_stdin) {
+			has_stdin = check_stdin();
+		}
+		type = IO_RD;
+		read_from_stdin = has_stdin;
+	}
 
 	if (dir && !strcmp(dir, argv[0]))
 		return io_open(io, "%s%s", dir, argv[1]);
@@ -358,6 +374,12 @@ io_run(struct io *io, enum io_type type, const char *dir, const char *argv[], ..
 	}
 
 	if ((io->pid = fork())) {
+		/* Close stdin after the first run. */
+		if (read_from_stdin) {
+			close(STDIN_FILENO);
+			has_stdin = FALSE;
+		}
+
 		if (io->pid == -1)
 			io->error = errno;
 		if (pipefds[!(type == IO_WR)] != -1)
@@ -375,7 +397,11 @@ io_run(struct io *io, enum io_type type, const char *dir, const char *argv[], ..
 							? pipefds[1] : devnull;
 			int errorfd = open_trace(devnull, argv);
 
-			dup2(readfd,  STDIN_FILENO);
+			/* Inject stdin given on the command line. */
+			if (!read_from_stdin) {
+				dup2(readfd,  STDIN_FILENO);
+			}
+
 			dup2(writefd, STDOUT_FILENO);
 			dup2(errorfd, STDERR_FILENO);
 

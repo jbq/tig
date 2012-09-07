@@ -40,6 +40,8 @@ Improvements:
    commit IDs in the main view and ID width in the blame view. (GH #77)
  - Allow to override git-based encoding to UTF-8 by setting
    'i18n.commitencoding' or 'gui.encoding'.
+ - Commit IDs are read from stdin when --stdin is given; works for main
+   and diff view, e.g. `tig --no-walk --stdin < cherry-picks.txt`.
 
 Bug fixes:
 

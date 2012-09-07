@@ -51,4 +51,7 @@
 		opt_commit_order_arg, (diffargs), (revargs), \
 		"--", (fileargs), NULL
 
+#define GIT_REV_FLAGS \
+	"--stdin", "--no-walk"
+
 #endif
