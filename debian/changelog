@@ -1,3 +1,9 @@
+tig (1.0-2ubuntu1) stable; urgency=low
+
+  * Import main-view-with-stdin branch
+
+ -- Jean-Baptiste Quenot <jbq@caraldi.com>  Mon, 24 Sep 2012 11:24:00 +0200
+
 tig (1.0-2) unstable; urgency=low
 
   * debian/patches:
