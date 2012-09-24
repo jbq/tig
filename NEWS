@@ -1,0 +1,483 @@
+Release notes
+=============
+
+tig-1.0
+-------
+
+The master repository is git://github.com/jonas/tig.git, and the old
+master repository (http://jonas.nitro.dk/tig/tig.git) will be retired.
+
+Improvements:
+
+ - Use git-log(1)s default commit ordering. The old behavior can be
+   restored by adding `set commit-order = topo` to ~/.tigrc.
+ - Support staging of single lines. Bound to '1' default. (GH #21)
+ - Use +<lineno> to open the initial view at an arbitrary line. (GH #20)
+ - Add show-notes ~/.tigrc option. Notes are displayed by default.
+ - Support jumping to specific SHAs in the main view.
+ - Decorate replaced commits.
+ - Display line numbers in main view.
+ - Colorize binary diff stats. (GH #17)
+ - Custom colorization of lines matching a string prefix (GH #16).
+   Example configuration: color "Reported-by:" green default
+ - Use git's color settings for the main, status and diff views.
+   Put `set read-git-colors = no` in ~/.tigrc to disable.
+ - Handle editor options with multiple arguments. (GH #12)
+ - Show filename when running tig blame with copy detection. (GH #19)
+ - Use 'source <path>' command to load additional files from ~/.tigrc
+ - User-defined commands prefixed with '@' are run with no console
+   output, e.g.
+
+   	bind generic 3 !@rm sys$command
+
+ - Make display of space changes togglable in the diff and stage view.
+   Bound to 'W' by default.
+ - Use per-file encoding specified in gitattributes(5) for blobs and
+   unstaged files.
+ - Obsolete commit-encoding option and pass --encoding=UTF-8 to revision
+   commands.
+ - Main view: show uncommitted changes as staged/unstaged commits.
+   Can be disabled by putting `set show-changes = no` in ~/.tigrc.
+ - Add %(prompt) external command variable, which will prompt for the
+   argument value.
+ - Log information about git commands when the TIG_TRACE environment
+   variable is set. Example: `TIG_TRACE=/tmp/tig.log tig`
+ - Branch view: Show the title of the last commit.
+ - Increase the author auto-abbreviation threshold to 10. (GH #49)
+ - For old commits show number of years in relative dates. (GH #50)
+
+
+Bug fixes:
+
+ - Fix navigation behavior when going from branch to main view. (GH #38)
+ - Fix segfault when sorting the tree view by author name.
+ - Fix diff stat navigation for unmodified files with stat changes.
+ - Show branches/refs which names are a substring of the current branch.
+ - Stage view: fix off-by-one error when jumping to a file in a diff
+   with only one file.
+ - Fix diff-header colorization. (GH #15)
+  
+tig-0.18
+--------
+
+Incompatibilities:
+
+ - Remove support for the deprecated TIG_{MAIN,DIFF,LOG,TREE,BLOB}_CMD
+   environment variables.
+
+Improvements:
+
+ - Pressing enter on diff stat file lines will jump to file's diff.
+ - Naïvely color blame IDs to distinguish lines.
+ - Document palette color options used for revision graph and blame IDs.
+ - Add support for blaming diff lines.
+ - Add diff-context option and bindings to increase the diff context in
+   the diff and stage view.
+ - (GH-6) Make blame configurable via extra options passed from the command
+   line and blame-options setting from ~/.tigrc. For example:
+   
+   	set blame-options = -C -C -C
+
+Bug fixes:
+
+ - Expand browsing state variables for prompt. (LP #694780, Debian #635546)
+ - Fix segfault when sorting the branch view by author.
+ - Expand %(directory) to . for the root directory. (GH-3)
+ - Accept 'utf-8' for the line-graphics option as indicated in the docs.
+ - Use erasechar() to check for the correct backspace character.
+
+tig-0.17
+--------
+
+Improvements:
+
+ - Start rewrite of the revision graph renderer. Three modes are
+   supported UTF-8, ncurses line graphics, and ASCII. Also, enable
+   revision graph rendering by default.
+
+Bug fixes:
+
+ - Fix ncurses 5.8 issue by passing non-zero column size to newwin().
+ - Fix opening of diffs when browsing branches.
+
+tig-0.16.2
+----------
+
+Bug fixes:
+
+ - Fix regression causing empty tree view.
+ - Fix set_tabsize() compile error for older versions of ncurses.
+
+tig-0.16.1
+----------
+
+Improvements:
+
+ - Add scroll-first-col action to jump to the first column. Bound to '|'
+   by default.
+ - Add 'status-untracked-dirs' option to ignore unknown directories
+   contents in the status view. On by default.
+
+Bug fixes:
+
+ - Fix 'tig show <commit>' to show the provided commit.
+ - Fix problem with empty diff views when file specs were passed on the
+   command line.
+ - Fix segfault when starting tig in pager mode.
+
+tig-0.16
+--------
+
+Incompatibilities:
+
+ - Encode everything internally as UTF-8. This can affect performance,
+   but should in general improve handling of character lengths etc.
+   Also, to properly handle UTF-8 environments use ncurses with wide
+   character support.
+ - The use of TIG_{MAIN,DIFF,LOG,TREE,BLOB}_CMD environment variables
+   has been deprecated. To allow configuration of the diff view,
+   TIG_DIFF_OPTS can be used.
+
+Improvements:
+
+ - Plug several memory leaks.
+ - Command line arguments are split into diff, revision, and file
+   arguments and made available as %(diffargs), %(revargs), and
+   %(fileargs). Diff view will limit diffs using %(fileargs).
+ - Status view: update the file variable when a line is selected so
+   %(file) works as expected.
+ - Branch view: add %(branch) symbol providing access to the selected
+   branch.
+ - Branch view: add entry to browse all branches (uses git-log's --all
+   flag).
+ - Abbreviation of author names can now be configured and toggled.
+ - Mark detached heads with [HEAD].
+ - Add support for displaying dates in local time.
+
+Bug fixes:
+
+ - Status view: fix usage from sub directories, which was broken by the
+   changes made to support blame view from sub directories.
+ - Fix text expansion to not truncate long lines
+ - Fix parsing of boolean show-date values.
+ - Fix relative date.
+ - Fix unbind to behave as if the keybinding was never defined.
+ - Fix unbind to also cover built-in run requests.
+ - Fix parsing of unknown keymap names.
+ - Blame view: fix parent blame to detect renames. It uses "previous"
+   line info from the blame porcelain output added in git version 1.6.3.
+
+tig-0.15
+--------
+
+Incompatibilities:
+
+ - Setting the cursor color no longer automatically sets the text to
+   bold. The old 'lazy' behavior was a bug.
+ - Remove check for git-repo-config, which was officially deprecated in
+   git version 1.5.4. The configure script no longer depends on git
+   being installed.
+
+Improvements:
+
+ - Provide the manual as a man page named tigmanual(7).
+ - Add ability to toggle between showing shorter dates (without time
+   info) and relative dates. Use 'D' to toggle between date formats.
+ - Show the active (instead of the default) keybindings in the help
+   view. Furthermore, honor the keymap when suggesting actions in the
+   help messages.
+ - Add branch view for choosing which branch to display in the main
+   view. Bound to 'H' by default.
+ - Tree view: show entry to parent directory ('..') when running from
+   subdirectory.
+ - Tree view: sort entries by name, date or author. Toggling is bound to
+   'i' by default, with 'I' controlling whether or not to sort in
+   ascending order.
+ - Make height of the lower view in a split view configurable by setting
+   the 'split-view-height' variable to a number or a percentage.
+   Defaults to 2/3 of the total view height.
+ - Allow multiple text attributes for color commands:
+
+	color cursor white blue underline bold
+
+Bug fixes:
+
+ - Blame view: fix loading of blame data when opened from the tree view
+   and CWD is not the repo root. (Debian bug 540766)
+ - Tree view: fix searching.
+
+tig-0.14.1
+----------
+
+Improvements:
+
+ - Status view: improve "on branch" information inspired by the prompt
+   code in git's bash completion script.
+ - Colors for 256-capable terminals can be specified as colorN.
+ - Entering a number in the prompt will jump to that line number.
+ - Handle core.worktree by setting GIT_DIR and GIT_WORK_TREE.
+ - Make behavior of horizontal scrolling configurable by setting the
+   'horizontal-scroll' variable to a number or a percentage. Defaults to
+   scrolling 50% of the view width.
+
+Bug fixes:
+
+ - Status view: show error when failing to open a file.
+ - Status view: report failures to update a file.
+ - Blame view: fix problem with uninitialized variable.
+ - Blame view: use line number information when loading blame for
+   specific commit.
+ - Fix handling of quoted strings in the config file.
+ - Fix horizontal scrolling glitches.
+
+tig-0.14
+--------
+
+Incompatibilities:
+
+ - The screen-resize action has been deprecated. It had no real use for
+   users and was never meant to be exposed.
+ - The "tree-parent" action was renamed to "parent". Warnings will be
+   emitted for transition.
+ - Remove parsing of deprecated option -S and subcommands log and diff.
+ - The "author" color replaces "main-author". Setting the latter will
+   now set the "author" color.
+
+Improvements:
+
+ - Horizontal scrolling. Bound to Left/Right by default.
+ - Read tigrc(5) options from git configuration files using the syntax:
+
+	[tig] show-rev-graph = true
+	[tig "color"] cursor = yellow red bold 
+	[tig "bind"] generic = P parent
+
+ - Tree view: avoid flickering when updating.
+ - Tree view: annotate entries with commit information.
+ - Tree & blob view: open any blob in an editor.
+ - Stage & main view: restore view position when reloading.
+ - Blame view: load blame for parent commit. For merge commits the parent
+   is queried. Bound to ',' by default via the existing "parent" action.
+ - Abbreviate author names to initials when the width of the author column
+   is below 6 characters.
+
+Bug fixes:
+
+ - Tree view: fix memory corruption bug when updating.
+ - Tree view: improve handling of empty trees.
+ - Status view: fix reverting of unmerged files.
+ - Fix regression for non-UTF-8 locales corrupting the view data.
+ - Fix regression parsing multiple spaces in ~/.tigrc.
+
+tig-0.13
+--------
+
+Incompatibilities:
+
+ - Commands from the environment (e.g. TIG_MAIN_CMD) will no longer have
+   access to shell features, such as subshells and variable expansion.
+   The easiest way to upgrade your configuration is to put such commands
+   in a script file or as a git alias.
+
+Improvements:
+
+ - Display repository references in the sorted order: tags, heads,
+   tracked remotes, remotes.
+ - Add bash completion for blame.
+ - Tree view: edit files of the current branch.
+ - Run requests: new identifiers %(directory), %(file), and %(ref)
+ - Improve responsiveness and view loading speed by using select(2).
+
+Bug fixes:
+
+ - Separate blame revision and file argument by "--" to avoid problems.
+ - Main view: fix redrawing of the last commit wrt. the revision graph.
+ - Fix waiting for input after executing a run request in pager mode.
+ - Status & stage view: refuse to open directories and deleted files.
+ - Tree view: show error when requesting blame for all non-file entries.
+ - Do not draw loading views, which are not displayed.
+ - Fix launching of mergetool from a subdirectory.
+
+tig-0.12.1
+----------
+
+Improvements:
+
+ - Status view: revert uncommitted diff chunks and unstaged files with
+   changes. Bound to '!' by default.
+ - Main view: use --topo-order also when rev-list arguments are given on
+   the command line.
+ - Log view: support for refreshing.
+
+Bug fixes:
+
+ - Status view: use ls-files' --exclude-standard so user specific ignore
+   rules are effective. The option was added in git version 1.5.4.
+ - Stage view: fix assertion failure triggered when updating while
+   status view is not displayed.
+ - Help view: avoid confusion by showing "(no key)" instead of "'?'" for
+   unbound requests.
+ - Reload repository references when refreshing the main (and log) view.
+ - Do not maximize views when refreshing.
+
+tig-0.12
+--------
+
+Improvements:
+
+ - F5 also refreshes the current view.
+ - Allow line graphics to be disabled with new line-graphics option.
+ - Main view: also include the reference names when searching.
+ - Main view: support for refreshing.
+ - Main view: disable boundary commits by default. Use --boundary when
+   they should be shown. (Debian bug 498628)
+ - Stage view: add stage-next action to jump to next diff chunk that can
+   be staged. By default bound to '@'.
+ - Configure: check for the ncurses header files.
+ - Add author-width option to customize the width of the author column.
+   For example, put the following in ~/.tigrc: set author-width = 10
+
+Bug fixes:
+
+ - Fix regression when staging all diff chunks in a section.
+ - Bind the maximize view action to 'O'; it conflicted with the
+   keybinding to launch the merge tool in the status view.
+ - Fix problem with $(cmd) usage in shell code. Some shells (jsh)
+   installed as /bin/sh does not support it.
+ - Do not show incomplete boundary commits when --no-walk is used.
+ - Documentation: Rename gitlink macro to support AsciiDoc 8.2.3.
+ - Ignore pipe reads with errno "Success" reported after a signals,
+   for example when refreshing doing background loading.
+
+tig-0.11
+--------
+
+Incompatibilities:
+
+ - Remove parsing of deprecated options: -g, -l, -d.
+ - The first seen '--' will stop option parsing and is passed to git
+   instead of breaking out of tig's option parsing.
+
+New features:
+
+ - Blame view; bound to 'B' by default, reachable from the command line
+   and the tree, status, and stage views.
+ - Blame/main view: allow display of date, author, and references to be
+   toggled on/off. Bound to 'D', 'A', and 'F' respectively.
+ - Add action to maximize the current view.
+
+Improvements:
+
+ - Show the current branch in the status view.
+ - Show local/light-weight tags.
+
+Bug fixes:
+
+ - Fix regressions for the pager mode.
+ - Fix refreshing of the index with working directory info.
+
+tig-0.10.1
+----------
+
+Improvements:
+
+ - Status view: detect renamed files and show them with 'R'.
+ - Status view: refresh the index to avoid "empty diffs".
+ - Diff view: make diff headers more verbose to include e.g. committer.
+ - Configure: check for the ncursesw library.
+
+Bug fixes:
+
+ - Fix UTF-8 handling for tag names and commit messages.
+ - Fix the check for git-config(1) in configure to handle the case when
+   git has been installed using a libexecdir which is not in the path.
+ - Fix replacing of SYSCONFDIR when installing from released tarballs.
+
+tig-0.10
+---------
+
+Incompatibilities:
+
+ - Deprecate most tig specific command line options to make tig more
+   compatible with gitk. The deprecated options are: -g, -l, -d, and -S.
+   Use of any of them will result in a warning being printed to stderr.
+   Instead of '-S', use the new 'status' subcommand.
+ - Make man page building depend on DocBook XSL version >= 1.72.0.
+ - Install man pages in $(prefix)/share/man.
+ - Implement the cherry pick action (bound to 'C') using new support for
+   running external commands. This obsoletes the TIG_CHEERY_PICK
+   environment variable
+
+New features:
+
+ - Add support for binding keys to external commands. To bind '.' to
+   running git-commit(1), add the line: "bind generic . !git commit" to
+   your ~/.tigrc. Each command can have replacement string such as
+   %(commit), %(head), and %(blob), which are substituted before the
+   command is run.
+ - Add system-wide configuration file defaulting to $(prefix)/etc/tigrc.
+ - Add the environment variables TIGRC_USER and TIGRC_SYSTEM to change
+   user and system-wide configuration files, respectively.
+
+Improvements:
+
+ - Main view: color the revision graph.
+ - Main view: show boundary commits; they are marked with '^' in the
+   revision graph.
+ - Tree view: add tree-parent action to jump to view of the parent tree.
+   Bound to ',' by default.
+ - Allow the default terminal colors to be overwritten. To use black
+   text on white, add the line "color default white black" to your
+   ~/.tigrc.
+ - Misc. documentation improvements.
+
+Bug fixes:
+
+ - Use git-diff-index(1) and git-diff-files(1) instead of git-diff(1) to
+   avoid running external diff drivers.
+ - Use --no-color when calling git-log(1).
+ - Fix crash when opening mergetool for lines that are not unmerged.
+
+tig-0.9.1
+---------
+
+Incompatibilities:
+
+ - Make the clean rule to never remove generated documentation files.
+   Use the distclean rule for accomplishing this.
+
+New features:
+
+ - Add support for cherry-picking commits in the main view to the
+   current branch. Bound to 'C' by default.
+
+Improvements:
+
+ - Add support for launching git-mergetool(1) from the status view.
+   Bound to 'M' by default.
+ - Add support for refreshing/reloading the status view
+ - Detect working trees and disable the status view when it is missing.
+
+Bug fixes:
+
+ - Fix iconv() checking in configure.
+ - Fix editor invocation to make paths relative to the project root.
+ - Fix out-of-range current line when reloading the status view.
+ - Include autoconf files in the tarball generated by `make dist`.
+
+tig-0.9
+-------
+
+New features:
+
+ - Add bash completion script for tig (contrib/tig-completion.bash).
+ - Add optional autoconf-based build infrastructure.
+ - Add stage view for showing changes in the working tree and add
+   support for staging individual diff chunks for commit.
+
+Improvements:
+
+ - Status view: allow all files in a section to be staged for commit.
+ - Status view: Add support for opening files in an editor. Bound to 'e'
+   by default.
+ - Tree view: use a stack for remembering the lines for parent tree.
