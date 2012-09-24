@@ -23,3 +23,5 @@ test-graph
 *.o
 *.xml
 *~
+*.sw*
+.sw*
